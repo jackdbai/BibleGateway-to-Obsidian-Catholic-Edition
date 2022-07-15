@@ -1,31 +1,31 @@
 #!/bin/bash
-#----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# This script modifies selfire1's BibleGateway-to-Obsidian script to download the 
+# Douay-Rheims version with the correct number and order of books. This is intentional 
+# as the DRA is the probablymost notable Catholic version available on BibleGateway 
+# that is public domain.
+# ----------------------------------------------------------------------------------
 # This script runs Jonathan clark's bg2md.rb ruby script and formats the output
-# to be useful in Obsidian. Find the script here: https://github.com/jgclark/BibleGateway-to-Markdown
+# to be useful in Obsidian. Find the script here: 
+# https://github.com/jgclark/BibleGateway-to-Markdown
 #
 # It needs to be run in the same directory as the 'bg2md.rb' script and will output
 # one .md file for each chapter, organising them in folders corresponding to the book.
 # Navigation on the top and bottom is also added.
-#
-#----------------------------------------------------------------------------------
-# SETTINGS
-#----------------------------------------------------------------------------------
-# Setting a different translation:
-# Using the abbreviation with the -v flag, you can call on a different translation.
-# It defaults to the "World English Bible", if you change the translation,
-# make sure to honour the copyright restrictions.
-#----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+
+# Get prerequisites - uncomment for first run
+# sudo gem install colorize && sudo gem install optparse && sudo gem install clipboard
 
 usage()
 {
 	echo "Usage: $0 [-beaicyh] [-v version]"
-	echo "  -v version   Specify the translation to download (default = WEB)"
-	echo "  -b    Set words of Jesus in bold"
+	# echo "  -b    Set words of Jesus in bold" # Not supported in DRA
 	echo "  -e    Include editorial headers"
 	echo "  -a    Create an alias in the YAML front matter for each chapter title"
 	echo "  -i    Show download information (i.e. verbose mode)"
-	echo "  -c    Include inline navigation for the breadcrumbs plugin (e.g. 'up', 'next','previous')"
-	echo "  -y    Print navigation for the breadcrumbs plugin (e.g. 'up', 'next','previous') in the frontmatter (YAML)"
+	# echo "  -c    Include inline navigation for the breadcrumbs plugin (e.g. 'up', 'next','previous')" # Probably broken and I don't use it
+	# echo "  -y    Print navigation for the breadcrumbs plugin (e.g. 'up', 'next','previous') in the frontmatter (YAML)"
 	echo "  -h    Display help"
 	exit 1
 }
@@ -33,7 +33,7 @@ usage()
 # Extract command line options
 
 # Clear translation variable if it exists and set defaults for others
-translation='WEB'    # Which translation to use
+translation='DRA'    # Which translation to use
 boldwords="false"    # Set words of Jesus in bold
 headers="false"      # Include editorial headers
 aliases="false"      # Create an alias in the YAML front matter for each chapter title
@@ -45,29 +45,29 @@ breadcrumbs_yaml="false"      # Print breadcrumbs in the YAML
 while getopts 'v:beaicy?h' c
 do
 	case $c in
-		v) translation=$OPTARG ;;
-		b) boldwords="true" ;;
+		# b) boldwords="true" ;;
 		e) headers="true" ;;
 		a) aliases="true" ;;
 		i) verbose="true" ;;
-		c) breadcrumbs_inline="true" ;;
-		y) breadcrumbs_yaml="true" ;;
+		# c) breadcrumbs_inline="true" ;;
+		# y) breadcrumbs_yaml="true" ;;
 		h|?) usage ;; 
 	esac
 done
 
 # Copyright disclaimer
-echo "I confirm that I have checked and understand the copyright/license conditions for ${translation} and wish to continue downloading it in its entirety.?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) break;;
-        No ) exit;;
-    esac
-done
+## REMOVED AS DRA IS PUBLIC DOMAIN AND THIS SCRIPT IS NOT INTENDED TO DOWNLOAD OTHER VERSIONS ##
+# echo "I confirm that I have checked and understand the copyright/license conditions for ${translation} and wish to continue downloading it in its entirety.?"
+# select yn in "Yes" "No"; do
+#     case $yn in
+#         Yes ) break;;
+#         No ) exit;;
+#     esac
+# done
 
 # Initialize variables
 book_counter=0 # Setting the counter to 0
-book_counter_max=66 # Setting the max amount to 66, since there are 66 books we want to import
+book_counter_max=73 # Setting the max amount to 73, since there are 66 books in the Holy Bible
 
 # Book list
 declare -a bookarray # Declaring the Books of the Bible as a list
@@ -79,18 +79,17 @@ declare -a lengtharray # Declaring amount of chapters in each book
 # -------------------------------------------
 # For Translation, translate these three lists. Seperated by space and wrapped in quotes if they include whitespace.
 # Name of "The Bible" in your language
-biblename="The Bible"
+biblename="Holy Bible"
 # Full names of the books of the Bible
-bookarray=(Genesis Exodus Leviticus Numbers Deuteronomy Joshua Judges Ruth "1 Samuel" "2 Samuel" "1 Kings" "2 Kings" "1 Chronicles" "2 Chronicles" Ezra Nehemiah Esther Job Psalms Proverbs Ecclesiastes "Song of Solomon" Isaiah Jeremiah Lamentations Ezekiel Daniel Hosea Joel Amos Obadiah Jonah Micah Nahum Habakkuk Zephaniah Haggai Zechariah Malachi Matthew Mark Luke John Acts
-Romans "1 Corinthians" "2 Corinthians" Galatians Ephesians Philippians Colossians "1 Thessalonians" "2 Thessalonians" "1 Timothy" "2 Timothy" Titus Philemon Hebrews James "1 Peter" "2 Peter" "1 John" "2 John" "3 John" Jude Revelation)
+bookarray=(Genesis Exodus Leviticus Numbers Deuteronomy Joshua Judges Ruth "1 Samuel" "2 Samuel" "1 Kings" "2 Kings" "1 Chronicles" "2 Chronicles" Ezra Nehemiah Tobit Judith Esther Job Psalms Proverbs Ecclesiastes "Song of Solomon" Wisdom Sirach Isaiah Jeremiah Lamentations Baruch Ezekiel Daniel Hosea Joel Amos Obadiah Jonah Micah Nahum Habakkuk Zephaniah Haggai Zechariah Malachi "1 Maccabees" "2 Maccabees" Matthew Mark Luke John Acts Romans "1 Corinthians" "2 Corinthians" Galatians Ephesians Philippians Colossians "1 Thessalonians" "2 Thessalonians" "1 Timothy" "2 Timothy" Titus Philemon Hebrews James "1 Peter" "2 Peter" "1 John" "2 John" "3 John" Jude Revelation)
 # Short names of the books of the Bible
-abbarray=(Gen Exod Lev Num Deut Josh Judg Ruth "1 Sam" "2 Sam" "1 Kings" "2 Kings" "1 Chron" "2 Chron" Ezr Neh Esth Job Ps Prov Eccles Song Isa Jer Lam Ezek Dan Hos Joel Am Obad Jonah Micah Nah Hab Zeph Hag Zech Mal Matt Mark Luke John Acts Rom "1 Cor" "2 Cor" Gal Ephes Phil Col "1 Thess" "2 Thess" "1 Tim" "2 Tim" Titus Philem Heb James "1 Pet" "2 Pet" "1 John" "2 John" "3 John" Jude Rev)
+abbarray=(Gen Exod Lev Num Deut Josh Judg Ruth "1 Sam" "2 Sam" "1 Kings" "2 Kings" "1 Chron" "2 Chron" Ezr Neh Tob Jdt Esth Job Ps Prov Eccles Song Wis Sir Isa Jer Lam Bar Ezek Dan Hos Joel Am Obad Jonah Micah Nah Hab Zeph Hag Zech Mal "1 Macc" "2 Macc" Matt Mark Luke John Acts Rom "1 Cor" "2 Cor" Gal Ephes Phil Col "1 Thess" "2 Thess" "1 Tim" "2 Tim" Titus Philem Heb James "1 Pet" "2 Pet" "1 John" "2 John" "3 John" Jude Rev)
 # -------------------------------------------
 
 # Book chapter list
-lengtharray=(50 40 27 36 34 24 21 4 31 24 22 25 29 36 10 13 10 42 150 31 12 8 66 52 5 48 12 14 3 9 1 4 7 3 3 3 2 14 4 28 16 24 21 28 16 16 13 6 6 4 4 5 3 6 4 3 1 13 5 5 3 5 1 1 1 22)
+lengtharray=(50 40 27 36 34 24 21 4 31 24 22 25 29 36 10 13 14 16 16 42 150 31 12 8 19 51 66 52 5 6 48 14 14 3 9 1 4 7 3 3 3 2 14 4 16 15 28 16 24 21 28 16 16 13 6 6 4 4 5 3 6 4 3 1 13 5 5 3 5 1 1 1 22)
 
-# Initialise the "The Bible" file for all of the books
+# Initialise the "Holy Bible" file for all of the books
 echo -e "# ${biblename}\n" >> "${biblename}.md"
 
 if ${verbose} -eq "true"; then
@@ -236,14 +235,19 @@ alias="Aliases: [${book} ${chapter}]" # Add other aliases or 'Tags:' here if des
   mkdir -p "./${biblename} (${translation})/${folder_name}"; mv "${filename}".md "./${biblename} (${translation})/${folder_name}"
 
 
-done # End of the book exporting loop
+    done # End of the book exporting loop
 
   # Create an overview file for each book of the Bible:
-  overview_file="links: [[${biblename}]]\n# ${book}\n\n[[${abbreviation} 1|Start Reading →]]"
+  ## Modified to add links to each .md of the book's file, this probably breaks breadcrumbs.
+  overview_file="\n# ${book}\n\n"
+  for ((chapter=1; chapter <= maxchapter; chapter++))
+    do
+      overview_file="${overview_file}- [[${abbreviation} ${chapter}]]\n"
+    done
   echo -e $overview_file >> "$book.md"
   mv "$book.md" "./${biblename} (${translation})/${folder_name}"
 
-  # Append the bookname to "The Bible" file
+  # Append the bookname to "Holy Bible" file
   echo -e "* [[${book}]]" >> "${biblename}.md"
   done
 
