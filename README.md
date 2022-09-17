@@ -1,6 +1,6 @@
 # BibleGateway-to-Obsidian: Catholic Edition
 ## Fork
-This script modifies @selfire1's BibleGateway-to-Obsidian script to download the  Douay-Rheims version with the correct number and order of books. This is intentional as the DRA is the probablymost notable Catholic version available on BibleGateway that is public domain.
+This script modifies @selfire1's BibleGateway-to-Obsidian script to download the  Douay-Rheims version with the correct number and order of books. This is intentional as the DRA is the most notable Catholic version available on BibleGateway that is public domain.
 
 This version also adds chapter links to each .md of the book's files. This probably breaks breadcrumbs so that's been commented out as well.
 
