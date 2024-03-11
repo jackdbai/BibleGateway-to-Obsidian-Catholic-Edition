@@ -2,7 +2,7 @@
 # ----------------------------------------------------------------------------------
 # This script modifies selfire1's BibleGateway-to-Obsidian script to download the
 # Douay-Rheims version with the correct number and order of books. This is intentional
-# as the DRA is the probablymost notable Catholic version available on BibleGateway
+# as the DRA is the probablymost notable English Catholic version available on BibleGateway
 # that is public domain.
 # ----------------------------------------------------------------------------------
 # This script runs Jonathan clark's bg2md.rb ruby script and formats the output
