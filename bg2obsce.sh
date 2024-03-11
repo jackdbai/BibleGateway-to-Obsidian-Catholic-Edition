@@ -1,12 +1,12 @@
 #!/bin/bash
 # ----------------------------------------------------------------------------------
-# This script modifies selfire1's BibleGateway-to-Obsidian script to download the 
-# Douay-Rheims version with the correct number and order of books. This is intentional 
-# as the DRA is the probablymost notable Catholic version available on BibleGateway 
+# This script modifies selfire1's BibleGateway-to-Obsidian script to download the
+# Douay-Rheims version with the correct number and order of books. This is intentional
+# as the DRA is the probablymost notable Catholic version available on BibleGateway
 # that is public domain.
 # ----------------------------------------------------------------------------------
 # This script runs Jonathan clark's bg2md.rb ruby script and formats the output
-# to be useful in Obsidian. Find the script here: 
+# to be useful in Obsidian. Find the script here:
 # https://github.com/jgclark/BibleGateway-to-Markdown
 #
 # It needs to be run in the same directory as the 'bg2md.rb' script and will output
@@ -51,7 +51,7 @@ do
 		i) verbose="true" ;;
 		# c) breadcrumbs_inline="true" ;;
 		# y) breadcrumbs_yaml="true" ;;
-		h|?) usage ;; 
+		h|?) usage ;;
 	esac
 done
 
@@ -67,7 +67,7 @@ done
 
 # Initialize variables
 book_counter=0 # Setting the counter to 0
-book_counter_max=73 # Setting the max amount to 73, since there are 66 books in the Holy Bible
+book_counter_max=73 # Setting the max amount to 73, since there are more than 66 books in the Holy Bible
 
 # Book list
 declare -a bookarray # Declaring the Books of the Bible as a list
@@ -221,7 +221,7 @@ alias="Aliases: [${book} ${chapter}]" # Add other aliases or 'Tags:' here if des
     elif [ ${aliases} == "false" ] && [ ${breadcrumbs_yaml} == "true" ]; then
     yaml="${yaml_start}${bc_yaml}${yaml_end}"
   fi
-  
+
 
   export="${yaml}${export}"
   # Export

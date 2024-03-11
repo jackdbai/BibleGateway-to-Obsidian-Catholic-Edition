@@ -1,12 +1,12 @@
 # BibleGateway-to-Obsidian: Catholic Edition
 ## Fork
-This script modifies @selfire1's BibleGateway-to-Obsidian script to download the  Douay-Rheims version with the correct number and order of books. This is intentional as the DRA is the most notable Catholic version available on BibleGateway that is public domain.
+This script modifies [selfire1](https://www.github.com/selfire1)'s BibleGateway-to-Obsidian script to download the  Douay-Rheims version with the correct number and order of books. This is intentional as the DRA is the most notable Catholic version available on BibleGateway that is public domain.
 
 This version also adds chapter links to each .md of the book's files. This probably breaks breadcrumbs so that's been commented out as well.
 
 Otherwise, the script is the same. @selfire1 did some great work, credit goes to him.
 
---- 
+---
 
 *Original README below:*
 
@@ -77,7 +77,7 @@ Several options are available via command-line switches. Type `bash bg2obs.sh -h
 
 #### Example usage
 | Command | Description |
-| ------- | ----------- | 
+| ------- | ----------- |
 |`bash bg2obs.sh -i -v NET` | Download a copy of the NET Bible with no other options.|
 |`bash bg2obs.sh -b` | Download a copy of the WEB Bible (default) with Jesus' words in bold. |
 |`bash bg2obs.sh -y` | Download a copy of the WEB Bible (default) with breadcrumbs navigation in the frontmatter. |
